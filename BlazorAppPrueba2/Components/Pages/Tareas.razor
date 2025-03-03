@@ -1,0 +1,64 @@
+﻿@page "/tareas"
+@using BlazorAppPrueba2.Models
+@using BlazorAppPrueba2.Services
+
+@inject TareaService TareaService
+
+<h3>Lista de Tareas</h3>
+
+@if (tareas is null)
+{
+    <p>Cargando...</p>
+}
+else if (tareas.Count == 0)
+{
+    <p>No hay tareas disponibles.</p>
+}
+else
+{
+    <ul>
+        @foreach (var tarea in tareas)
+        {
+            <li>@tarea.Titulo - @tarea.Estado</li>
+        }
+    </ul>
+}
+<!-- Formulario para agregar una nueva tarea -->
+<h4>Agregar Tarea</h4>
+<div>
+    <input @bind="nuevaTarea.Titulo" placeholder="Título" />
+    <input @bind="nuevaTarea.Descripcion" placeholder="Descripción" />
+    <input @bind="nuevaTarea.Estado" placeholder="Estado" />
+    <button @onclick="AgregarTarea">Agregar</button>
+</div>
+
+<h4>Eliminar Tarea</h4>
+<div>
+    <input @bind="nuevaTarea.Titulo" placeholder="Título" />
+    <input @bind="nuevaTarea.Descripcion" placeholder="Descripción" />
+    <input @bind="nuevaTarea.Estado" placeholder="Estado" />
+    <button @onclick="AgregarTarea">Agregar</button>
+</div>
+
+@code {
+    private List<Tarea> tareas = new();
+    private Tarea nuevaTarea = new();
+    private Tarea? tareaEditando;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        tareas = await TareaService.GetTareasAsync();
+    }
+    private async Task AgregarTarea()
+    {
+         await TareaService.CreateTareaAsync(nuevaTarea);
+        nuevaTarea = new();  // Limpiar el formulario
+        tareas = await TareaService.GetTareasAsync();  // Actualizar lista
+    }
+    private async Task EliminarTarea(int id)
+    {
+        await TareaService.DeleteTareaAsync(id);
+        tareas = await TareaService.GetTareasAsync();  // Actualizar lista
+    }
+}

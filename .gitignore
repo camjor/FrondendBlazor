@@ -1,0 +1,13 @@
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+*.cache
+*.rsp
+*.VC.db
+*.opendb
+*.sqlite
+*.sqlite-journal
+node_modules/
